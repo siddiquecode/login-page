@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: wheat;
+      /* background-image: url('/img/d.jpg');
+      background-repeat: no-repeat;
+      background-size: cover; */
+    }
+
+    .container {
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 45px 0;
+      padding: 30px;
+      margin-top: 50px;
+    }
+
+    h2 {
+      color: #d35252;
+    }
+
+    button {
+      background-color: #007bff;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container w-25 border py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <h2 class="mb-4">Registration Form</h2>
+      <form  onsubmit="submitForm(event)">
+        <div id="error"></div>
+        <div class="form-group">
+          <input type="text" class="form-control" id="username" name="name" placeholder="Username">
+        </div>
+
+        <div class="form-group">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+        </div>
+
+        <div class="form-group">
+          <input type="password" class="form-control" id="password"name="password" placeholder="Password">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  let emailUser = document.getElementById("email");
+  let userName = document.getElementById("username")
+  let passwordUser = document.getElementById("password");
+           
+  if ( window.history.replaceState ) {
+window.history.replaceState( null, null, window.location.href );
+}
+
+  let errorId  = document.getElementById("error");
+  
+  function showError(message) {
+
+const errorDiv = document.createElement("div");
+errorDiv.textContent = message;
+errorDiv.classList.add("error-message");
+errorId .appendChild(errorDiv);
+
+
+setTimeout(() => {
+errorId .removeChild(errorDiv);
+}, 5000);
+}
+
+  async function submitForm(e){
+      e.preventDefault();
+
+const data = {
+email: emailUser.value,
+name : userName.value,
+password: passwordUser.value
+};
+
+
+const response = await fetch("/admin/createuser", {
+method: "POST",
+headers: {
+  "Content-Type": "application/json",
+},
+body: JSON.stringify(data),
+});
+console.log(data)
+
+if (response.ok) {
+console.log("ok")
+const responseData = await response.json();
+console.log("Response Data:", responseData);
+
+window.location.href = "/admin/dashboard";
+} else {
+
+const errorMessage = await response.json();
+console.log(errorMessage)
+showError(errorMessage.mes)
+
+}
+
+  }
+
+
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
